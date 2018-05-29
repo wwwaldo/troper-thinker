@@ -10,9 +10,9 @@ def scrape_types():
     soup = BeautifulSoup(raw_html, 'html.parser')
 
     media_type_div = soup.find('div', id='media-namespaces')
-    media_type_list = media_type_div.ul.contents
+    media_type_checkboxes = media_type_div.find_all('input')
 
-    type_list = [media_type_item.contents[0]['value'] for media_type_item in media_type_list]
+    type_list = [media_type_box['value'] for media_type_box in media_type_checkboxes]
     return type_list
 
 def scrape_tropedef(type_list, url):
@@ -23,9 +23,9 @@ def scrape_tropedef(type_list, url):
 
     trope_def = TropeDef(soup.title.string)
 
-    # all_links = soup.find_all('a', href=re.compile('^.*/(' + '|'.join(type_list) + ')/.*$'))
+    all_links = soup.find_all('a', href=re.compile('^.*/(' + '|'.join(type_list) + ')/.*$'))
     print(type_list)
-    # print(all_links)
+    print(all_links)
 
     print(trope_def)
 
@@ -37,11 +37,11 @@ if __name__ == "__main__":
     if not os.path.exists('.types.pickle'):
         type_list = scrape_types()
         with open('.types.pickle', 'wb') as f:
-            pickle.dump(f, type_list)
+            pickle.dump(type_list, f)
 
     # Otherwise, it should be unpickled
-else:
-    with open('.types.pickle', 'rb') as f:
-        type_list = pickle.load(f)
+    else:
+        with open('.types.pickle', 'rb') as f:
+            type_list = pickle.load(f)
 
     scrape_tropedef(type_list, 'http://tvtropes.org/pmwiki/pmwiki.php/Main/JumpingTheShark')
