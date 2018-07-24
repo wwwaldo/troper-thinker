@@ -1,9 +1,12 @@
 import numpy as np
+import pickle
 import pdb # the python debugger
+
 
 initial_tropes_size = 26000 
 # wc tropes.txt was 25855 last we checked
 _debug = True
+
 
 class Storage:
     """
@@ -23,9 +26,9 @@ class Storage:
 
     @staticmethod
     def load(filename):
-        '''
-        load from an existing pickle file. 
-        ''' 
+        """
+        Load from an existing pickle file.
+        """
         with open(filename, "rb") as file:
             return pickle.load(file)
 
@@ -36,27 +39,28 @@ class Storage:
         return
 
     def __init__(self):
-        '''
+        """
         Initialize an empty store.
-        '''
+        """
         self.num_tropes = 0 
         self.num_media = 0
         self.tropes = dict()
         self.media = dict()
         self.trope_mapping = dict()
         self.media_mapping = dict()
-        self.matrix = np.zeros((1,1), dtype=np.int8) # fill this in using populate.
+        self.matrix = np.zeros((1,1), dtype=np.int8)  # fill this in using populate.
         return
 
     def __str__(self):
-        return f"(#Tropes {self.num_tropes} #Media {self.num_media}) \n {self.trope_mapping} \n {self.media_mapping} \n {self.matrix}"
+        return f"(#Tropes {self.num_tropes} #Media {self.num_media}) \n {self.trope_mapping} \n {self.media_mapping} " \
+               f"\n {self.matrix}"
     
     # might 'deprecate' this later
     def populate_from_text(self, filename):
         # assumes: file contains only valid URLs and possibly newlines
         with open(filename, "r") as file: 
             urls = file.readlines()
-            urls = (url.strip() for url in urls if url.strip()) # preprocessing
+            urls = (url.strip() for url in urls if url.strip())  # preprocessing
 
             tropes_added = 0 
             for url in urls:
@@ -68,9 +72,9 @@ class Storage:
             return
 
     def expand(self, dimension):
-        '''
+        """
         Method for dynamically resizing self.matrix. Internal use only. 
-        '''
+        """
         # dimension == "tropes" or "media"
         if dimension == "tropes":
             self.matrix = np.resize(self.matrix, (np.size(self.matrix, 0), 2 * np.size(self.matrix, 1)))
@@ -79,11 +83,11 @@ class Storage:
         return
 
     def add_trope(self, trope):
-        '''
+        """
         Add a new trope to the store.
 
         TODO -- handle trope aliasing.
-        '''
+        """
 
         # add a trope to self. trope is a string.
         # returns: ntropes added to self.
@@ -102,11 +106,11 @@ class Storage:
             return 1
 
     def add_media(self, media):
-        '''
+        """
         Add a new media to the store. 
 
         TODO -- refactor this function to account for media aliases.
-        '''
+        """
         # add a media to self. 
 
         if media in self.media_mapping:
@@ -121,11 +125,11 @@ class Storage:
             return 1
     
     def get_score(self, trope, media):
-        '''
+        """
         Get trope score for this trope-media pair.
         
         Return: score as np.int8 if both trope and media exist in store, otherwise None.
-        '''
+        """
         score = None
         # if trope in self.tropes and media in self.media:
         if trope in self.trope_mapping and media in self.media_mapping:
@@ -136,7 +140,7 @@ class Storage:
         return score
 
     def update(self, trope, media_scores):
-        '''
+        """
         Update a trope with media scores.
 
         Params:
@@ -161,7 +165,7 @@ class Storage:
         
         Notes: Permissively assumes media strings correspond to valid media names, which are unique identifiers. 
         Creates new entries in internal representation if media is not found.
-        '''
+        """
         if trope in self.trope_mapping:
             trope_index = self.trope_mapping[trope]
 
@@ -179,12 +183,11 @@ class Storage:
 
     def export(self, fname="trope-data.csv"): 
         # export self as csv
-        raise Exception("Function not implemented")
-        return
+        raise NotImplementedError
 
     def query(self, trope):
-        raise Exception("Function not implemented")
-        return
+        raise NotImplementedError
+
 
 def main():
     # create a new storage node.
@@ -213,8 +216,8 @@ def main():
 
     return
 
+
 if __name__ == "__main__":
-    print("Hello world")
     import doctest
     doctest.testmod() # run doctests.
 
@@ -255,7 +258,3 @@ footnote(3):
 use :choose-tree to switch between panes and sessions in tmux.
 
 """
-
-
-
-
