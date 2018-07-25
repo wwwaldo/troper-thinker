@@ -4,3 +4,4 @@ __pycache__/
 env/
 .types.pickle
 .idea/
+tropes.txt
