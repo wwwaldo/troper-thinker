@@ -1,6 +1,5 @@
 import numpy as np
 import pickle
-import pdb # the python debugger
 
 
 initial_tropes_size = 26000 
@@ -78,8 +77,10 @@ class Storage:
         # dimension == "tropes" or "media"
         if dimension == "tropes":
             self.matrix = np.resize(self.matrix, (np.size(self.matrix, 0), 2 * np.size(self.matrix, 1)))
+            self.matrix[self.matrix.shape[0] // 2:] = 0
         elif dimension == "media":
             self.matrix = np.resize(self.matrix, (2 * np.size(self.matrix, 0), np.size(self.matrix, 1)))
+            self.matrix[self.matrix.shape[1] // 2:] = 0
         return
 
     def add_trope(self, trope):
@@ -117,7 +118,7 @@ class Storage:
             return 0
         else:
             self.num_media += 1
-            if self.num_media > np.size(self.matrix, 1):
+            if self.num_media >= self.matrix.shape[1]:
                 self.expand("media")
 
             self.media_mapping[media] = self.num_media - 1
@@ -138,6 +139,17 @@ class Storage:
 
             score = self.matrix[trope_idx][media_idx]
         return score
+
+    def update_media(self, media, tropes):
+        media_index = self.media_mapping[media]
+
+        for trope in tropes:
+            # TODO: maintain a blacklist?
+            if trope not in self.trope_mapping:
+                self.add_trope(trope)
+
+            trope_index = self.trope_mapping[trope]
+            self.matrix[media_index][trope_index] = 1
 
     def update(self, trope, media_scores):
         """
