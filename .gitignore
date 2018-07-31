@@ -6,3 +6,4 @@ env/
 .idea/
 tropes.txt
 media.txt
+*.p

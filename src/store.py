@@ -76,11 +76,11 @@ class Storage:
         """
         # dimension == "tropes" or "media"
         if dimension == "tropes":
-            self.matrix = np.resize(self.matrix, (np.size(self.matrix, 0), 2 * np.size(self.matrix, 1)))
-            self.matrix[self.matrix.shape[0] // 2:] = 0
+            self.matrix = np.hstack([self.matrix, np.zeros(self.matrix.shape[0])[np.newaxis].T])
         elif dimension == "media":
+            import pdb; pdb.set_trace()
             self.matrix = np.resize(self.matrix, (2 * np.size(self.matrix, 0), np.size(self.matrix, 1)))
-            self.matrix[self.matrix.shape[1] // 2:] = 0
+            self.matrix[self.matrix.shape[0] // 2:] = 0
         return
 
     def add_trope(self, trope):
@@ -118,7 +118,7 @@ class Storage:
             return 0
         else:
             self.num_media += 1
-            if self.num_media >= self.matrix.shape[1]:
+            if self.num_media > self.matrix.shape[0]:
                 self.expand("media")
 
             self.media_mapping[media] = self.num_media - 1

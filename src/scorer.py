@@ -11,9 +11,13 @@ from store import Storage
 class Scorer:
     def __init__(self, fp):
         self._store = Storage().load(fp) if os.path.isfile(fp) else Storage()
+        self.fp = fp
 
         # TODO: make the score matrix part of the backing store, so we don't have to recompute on each initialization.
-        self._score = self.score() if self.ls() else np.array([], dtype=np.uint8)
+        if self.ls():
+            self.score()
+        else:
+            self._score = np.array([], dtype=np.uint)
 
     def score(self):
         """
@@ -82,4 +86,4 @@ class Scorer:
 
     def commit(self):
         """Saves the current data to persistent memory."""
-        self._store.store()
+        self._store.store(self.fp)
