@@ -44,7 +44,7 @@ class Scorer:
     def top(self, media, n=5):
         """Returns the N most similar media."""
         media_scores = self.get(media)
-        top_n_idxs = np.argsort(list(media_scores.values()))[::-2][:n]
+        top_n_idxs = np.argsort(list(media_scores.values()))[:n]
         return {row_key: row for (row_key, row) in np.array(list(media_scores.items()))[top_n_idxs]}
 
     def has(self, media):
