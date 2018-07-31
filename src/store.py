@@ -35,7 +35,6 @@ class Storage:
         with open(filename, "wb") as file:
             # pickle throws an error if life is bad
             pickle.dump(self, file) 
-        return
 
     def __init__(self):
         """
@@ -48,7 +47,6 @@ class Storage:
         self.trope_mapping = dict()
         self.media_mapping = dict()
         self.matrix = np.zeros((1,1), dtype=np.int8)  # fill this in using populate.
-        return
 
     def __str__(self):
         return f"(#Tropes {self.num_tropes} #Media {self.num_media}) \n {self.trope_mapping} \n {self.media_mapping} " \
@@ -68,7 +66,6 @@ class Storage:
 
             if _debug:
                 print(f"Added {tropes_added} tropes") 
-            return
 
     def expand(self, dimension):
         """
@@ -81,7 +78,6 @@ class Storage:
             import pdb; pdb.set_trace()
             self.matrix = np.resize(self.matrix, (2 * np.size(self.matrix, 0), np.size(self.matrix, 1)))
             self.matrix[self.matrix.shape[0] // 2:] = 0
-        return
 
     def add_trope(self, trope):
         """
@@ -191,8 +187,6 @@ class Storage:
             if _debug:
                 print(f"{trope} not found")
 
-        return
-
     def export(self, fname="trope-data.csv"): 
         # export self as csv
         raise NotImplementedError
@@ -223,10 +217,6 @@ def main():
     store.populate_from_text("tropes.txt")
     # print(f"{store}")
     # looks good!
-
-    # try adding media.
-
-    return
 
 
 if __name__ == "__main__":
