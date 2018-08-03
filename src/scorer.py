@@ -5,7 +5,7 @@ import requests
 from bs4 import BeautifulSoup
 import os
 # noinspection PyUnresolvedReferences
-from store import Storage
+from .store import Storage
 
 
 class Scorer:
